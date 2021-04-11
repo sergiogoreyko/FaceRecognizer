@@ -55,10 +55,9 @@ class AnimationViewController: UIViewController {
         } completion: { done in
             if done {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    let homeVC = HomeViewController()
-                    homeVC.modalTransitionStyle = .crossDissolve
-                    homeVC.modalPresentationStyle = .fullScreen
-                    self.present(homeVC, animated: true, completion: nil)
+                    let navVC = UINavigationController(rootViewController: HomeViewController())
+                    navVC.modalPresentationStyle = .fullScreen
+                    self.present(navVC, animated: true, completion: nil)
                 }
             }
         }

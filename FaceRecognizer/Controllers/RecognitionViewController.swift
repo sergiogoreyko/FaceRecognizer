@@ -74,6 +74,9 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
             return
         }
         
+        let faceRequestHandler = VNImageRequestHandler(cvPixelBuffer: imageBuffer, orientation: .leftMirrored, options: [:])
+        let labelRequestHandler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
+        
         let faceDetectionRequest = VNDetectFaceLandmarksRequest(completionHandler: { (request: VNRequest, error: Error?) in
             DispatchQueue.main.async {
                 self.faceLayers.forEach({ drawing in drawing.removeFromSuperlayer() })
@@ -94,9 +97,6 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
                 }
             }
         }
-        
-        let faceRequestHandler = VNImageRequestHandler(cvPixelBuffer: imageBuffer, orientation: .leftMirrored, options: [:])
-        let labelRequestHandler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
         
         do {
             try faceRequestHandler.perform([faceDetectionRequest])
@@ -194,7 +194,7 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
         let landmarkLayer = CAShapeLayer()
         landmarkLayer.path = landmarkPath
         landmarkLayer.fillColor = UIColor.clear.cgColor
-        landmarkLayer.strokeColor = UIColor.white.cgColor
+        landmarkLayer.strokeColor = UIColor.yellow.cgColor
         
         self.faceLayers.append(landmarkLayer)
         self.view.layer.addSublayer(landmarkLayer)

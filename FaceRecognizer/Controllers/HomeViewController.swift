@@ -39,17 +39,11 @@ class HomeViewController: UIViewController {
     
     @objc  private func buttonToFaceRecognition(_ sender: UIButton) {
         let recognitionVC = RecognitionViewController()
-        let navController = UINavigationController(rootViewController: recognitionVC)
-        
-        navController.navigationBar.barTintColor = #colorLiteral(red: 1, green: 0.2509803922, blue: 1, alpha: 1)
-        
-        recognitionVC.modalTransitionStyle = .coverVertical
-        recognitionVC.modalPresentationStyle = .fullScreen
-       
-        self.present(navController, animated: true, completion: nil)
+        navigationController?.pushViewController(recognitionVC, animated: true)
     }
     
     private func setupView() {
+        title = "Home Page"
         view.backgroundColor = #colorLiteral(red: 1, green: 0.2509803922, blue: 1, alpha: 1)
         
         view.addSubview(imageView)
