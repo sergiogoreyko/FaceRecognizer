@@ -37,7 +37,6 @@ class RecognitionViewController: UIViewController {
             if let deviceInput = try? AVCaptureDeviceInput(device: device) {
                 if captureSession.canAddInput(deviceInput) {
                     captureSession.addInput(deviceInput)
-                    
                     setupPreview()
                 }
             }
@@ -58,12 +57,6 @@ class RecognitionViewController: UIViewController {
         videoConnection?.videoOrientation = .portrait
     }
 }
-
-
-
-
-
-
 
 
 extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -111,6 +104,8 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
         }
     }
     
+    // MARK: - FACE LOCALIZATION
+    
     private func handleFaceDetectionObservations(observations: [VNFaceObservation]) {
         for observation in observations {
             let faceRectConverted = self.previewLayer.layerRectConverted(fromMetadataOutputRect: observation.boundingBox)
@@ -124,7 +119,7 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
             self.faceLayers.append(faceLayer)
             self.view.layer.addSublayer(faceLayer)
             
-            //FACE LANDMARKS
+            // FACE LANDMARKS
             if let landmarks = observation.landmarks {
                 if let leftEye = landmarks.leftEye {
                     self.handleLandmark(leftEye, faceBoundingBox: faceRectConverted)
@@ -153,34 +148,6 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
         }
     }
     
-    private func handleFaceRecognitionPredictions(predictions: [VNRecognizedObjectObservation]) {
-        for prediction in predictions {
-            let objectRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: prediction.boundingBox)
-            let objectRectanglePath = CGPath(rect: objectRect, transform: nil)
-            
-            let objectLayer = CAShapeLayer()
-            objectLayer.path = objectRectanglePath
-            
-            let labelLayer = CATextLayer()
-            labelLayer.frame = CGRect(x: objectRect.origin.x,
-                                      y: objectRect.origin.y - 5,
-                                      width: objectRect.size.width,
-                                      height: objectRect.size.width / 6)
-            
-            labelLayer.string = prediction.name ?? "Unknown"
-            labelLayer.fontSize = labelLayer.frame.width / 8
-            labelLayer.foregroundColor = UIColor.black.cgColor
-            labelLayer.backgroundColor = {
-                return labelLayer.string as! String == "Unknown" ? UIColor.red.cgColor : UIColor.green.cgColor
-            }()
-            labelLayer.cornerRadius = 10
-            labelLayer.alignmentMode = .center
-            
-            self.labelLayers.append(labelLayer)
-            self.view.layer.addSublayer(labelLayer)
-        }
-    }
-    
     private func handleLandmark(_ eye: VNFaceLandmarkRegion2D, faceBoundingBox: CGRect) {
         let landmarkPath = CGMutablePath()
         let landmarkPathPoints = eye.normalizedPoints
@@ -198,6 +165,34 @@ extension RecognitionViewController: AVCaptureVideoDataOutputSampleBufferDelegat
         
         self.faceLayers.append(landmarkLayer)
         self.view.layer.addSublayer(landmarkLayer)
+    }
+    
+    // MARK: - FACE RECOGNITION
+    
+    private func handleFaceRecognitionPredictions(predictions: [VNRecognizedObjectObservation]) {
+        for prediction in predictions {
+            let objectRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: prediction.boundingBox)
+            let objectRectanglePath = CGPath(rect: objectRect, transform: nil)
+            
+            let objectLayer = CAShapeLayer()
+            objectLayer.path = objectRectanglePath
+            
+            let labelLayer = CATextLayer()
+            labelLayer.frame = CGRect(x: objectRect.origin.x,
+                                      y: objectRect.origin.y - 5,
+                                      width: objectRect.size.width,
+                                      height: objectRect.size.width / 6)
+            
+            labelLayer.string = prediction.name
+            labelLayer.fontSize = labelLayer.frame.width / 8
+            labelLayer.foregroundColor = UIColor.black.cgColor
+            labelLayer.backgroundColor = UIColor.green.cgColor
+            labelLayer.cornerRadius = 10
+            labelLayer.alignmentMode = .center
+            
+            self.labelLayers.append(labelLayer)
+            self.view.layer.addSublayer(labelLayer)
+        }
     }
 }
 

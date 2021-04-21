@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonToFaceRecognition(_:)), for: .touchUpInside)
         button.setTitle("Start recognition", for: .normal)
         button.titleLabel?.font = UIFont(name: "Avenir-Heavy", size: 20)
+        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .systemOrange
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.systemOrange.cgColor
@@ -44,19 +45,22 @@ class HomeViewController: UIViewController {
     
     private func setupView() {
         title = "Home Page"
-        view.backgroundColor = #colorLiteral(red: 1, green: 0.2509803922, blue: 1, alpha: 1)
+        navigationController?.navigationBar.tintColor = .black
+        
+        view.backgroundColor = #colorLiteral(red: 0.3450980392, green: 0.3607843137, blue: 0.5882352941, alpha: 1)
         
         view.addSubview(imageView)
         view.addSubview(faceRecognitionButton)
         
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 250).isActive = true
         
         faceRecognitionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         faceRecognitionButton.widthAnchor.constraint(equalToConstant: view.frame.width - 100).isActive = true
         faceRecognitionButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        faceRecognitionButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 150).isActive = true
+        faceRecognitionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+        
     }
 }
